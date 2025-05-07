@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
+// Zeabur daje port preko ENV
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
@@ -16,19 +17,16 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    //app.UseHsts();
+    // app.UseHsts(); // može ostati isključen jer Zeabur koristi HTTPS
 }
 
-app.UseHttpsRedirection();
+// ❌ NE treba HTTPS redirection jer Zeabur reverse proxy radi to
+// app.UseHttpsRedirection(); // uklonjeno!
+
 app.UseStaticFiles();
-
 app.UseSession();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();
