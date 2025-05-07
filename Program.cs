@@ -5,10 +5,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
 // Zeabur daje port preko ENV
-var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
-builder.WebHost.ConfigureKestrel(serverOptions =>
+builder.WebHost.ConfigureKestrel(options =>
 {
-    serverOptions.ListenAnyIP(int.Parse(port));
+    options.ListenAnyIP(443, listenOptions =>
+    {
+        listenOptions.UseHttps();
+    });
 });
 
 var app = builder.Build();
@@ -17,11 +19,10 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // app.UseHsts(); // može ostati isključen jer Zeabur koristi HTTPS
+    app.UseHsts(); // može ostati isključen jer Zeabur koristi HTTPS
 }
 
-// ❌ NE treba HTTPS redirection jer Zeabur reverse proxy radi to
-// app.UseHttpsRedirection(); // uklonjeno!
+app.UseHttpsRedirection(); // uklonjeno!
 
 app.UseStaticFiles();
 app.UseSession();
