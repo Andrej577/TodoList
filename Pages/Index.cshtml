@@ -1,0 +1,79 @@
+﻿
+@page
+@model TodoList.Pages.IndexModel
+@{
+  ViewData["Title"] = "TODO Lista";
+}
+
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>@ViewData["Title"] - TodoList</title>
+<meta name="description" content="Simple and fast online to-do list. No login required. Just open and start organizing your tasks.">
+<meta name="keywords" content="todo list, no login todo, online todo, task manager, simple todo app, personal organizer, productivity tool, free todo app, no signup, fast task list">
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/TodoList.styles.css" asp-append-version="true" />
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h1 class="card-title text-center mb-4">Tasks</h1>
+
+    <form method="post" class="row g-2 mb-3">
+        <div class="col-9">
+            <input asp-for="NewText" class="form-control" placeholder="Dodaj novu stavku..." />
+        </div>
+        <div class="col-3">
+            <button type="submit" class="btn btn-primary w-100">Create</button>
+        </div>
+    </form>
+
+    @if (Model.Items.Count == 0)
+    {
+      <p class="text-muted">Nothing to do</p>
+    }
+    else
+    {
+      <ul class="list-group">
+
+        @foreach (var item in Model.Items)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center w-100">
+                    @if (Model.EditId == item.Id)
+                    {
+                        <form method="post" asp-page-handler="Update" asp-route-id="@item.Id" class="d-flex w-100 gap-2">
+                            <input type="text" name="EditedText" value="@Model.EditedText" class="form-control" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="flex-grow-1">@item.Text</span>
+                        <form method="post" asp-page-handler="Edit" asp-route-id="@item.Id" class="ms-2">
+                            <button type="submit" class="btn btn-sm btn-outline-success">Edit</button>
+                        </form>
+                    }
+
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="ms-2">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </div>
+            </li>
+        }
+      </ul>
+    }
+  </div>
+</div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
