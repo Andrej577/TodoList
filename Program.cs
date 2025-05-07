@@ -6,7 +6,7 @@ builder.Services.AddSession();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(8080);
+    serverOptions.ListenAnyIP(80);
 });
 
 var app = builder.Build();
