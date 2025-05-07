@@ -4,9 +4,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(3000);
+    serverOptions.ListenAnyIP(int.Parse(port));
 });
 
 var app = builder.Build();
